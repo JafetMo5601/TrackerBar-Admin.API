@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using tracker_bar_admin_api.DataModels;
 
 namespace tracker_bar_admin_api
 {
@@ -28,6 +30,9 @@ namespace tracker_bar_admin_api
         {
 
             services.AddControllers();
+            services.AddDbContext<UserAdminContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("UserAdminPortalDB")));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "tracker_bar_admin_api", Version = "v1" });
