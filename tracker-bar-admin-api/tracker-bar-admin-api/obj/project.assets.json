@@ -2056,19 +2056,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\capa6\\.nuget\\packages\\": {}
+    "C:\\Users\\Andres\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\OneDrive - Universidad Fidélitas\\PrograWeb\\TrackerBar\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api.csproj",
+      "projectUniqueName": "C:\\Users\\Andres\\Desktop\\Progra\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api.csproj",
       "projectName": "tracker-bar-admin-api",
-      "projectPath": "D:\\OneDrive - Universidad Fidélitas\\PrograWeb\\TrackerBar\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api.csproj",
-      "packagesPath": "C:\\Users\\capa6\\.nuget\\packages\\",
-      "outputPath": "D:\\OneDrive - Universidad Fidélitas\\PrograWeb\\TrackerBar\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\obj\\",
+      "projectPath": "C:\\Users\\Andres\\Desktop\\Progra\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api.csproj",
+      "packagesPath": "C:\\Users\\Andres\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Andres\\Desktop\\Progra\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\capa6\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Andres\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
