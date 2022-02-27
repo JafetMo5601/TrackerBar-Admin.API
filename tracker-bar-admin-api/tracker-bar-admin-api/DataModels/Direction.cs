@@ -7,7 +7,7 @@ namespace tracker_bar_admin_api.DataModels
     {
         public int DirectionId { get; set; }
         public string DirectionDescription { get; set; }
-        public IList<UserDirection> UserDirections { get; set; }
-
+        //public IList<UserDirection> UserDirections { get; set; }
+        public User User { get; set; }
     }
 }
