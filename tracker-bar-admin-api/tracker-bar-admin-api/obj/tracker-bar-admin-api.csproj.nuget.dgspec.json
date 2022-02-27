@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\OneDrive - Universidad Fidélitas\\PrograWeb\\TrackerBar\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api.csproj": {}
+    "C:\\Users\\jafet\\Documents\\University\\Progra_avanzada\\TrackerBar-Admin\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api.csproj": {}
   },
   "projects": {
-    "D:\\OneDrive - Universidad Fidélitas\\PrograWeb\\TrackerBar\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api.csproj": {
+    "C:\\Users\\jafet\\Documents\\University\\Progra_avanzada\\TrackerBar-Admin\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\OneDrive - Universidad Fidélitas\\PrograWeb\\TrackerBar\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api.csproj",
+        "projectUniqueName": "C:\\Users\\jafet\\Documents\\University\\Progra_avanzada\\TrackerBar-Admin\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api.csproj",
         "projectName": "tracker-bar-admin-api",
-        "projectPath": "D:\\OneDrive - Universidad Fidélitas\\PrograWeb\\TrackerBar\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api.csproj",
-        "packagesPath": "C:\\Users\\capa6\\.nuget\\packages\\",
-        "outputPath": "D:\\OneDrive - Universidad Fidélitas\\PrograWeb\\TrackerBar\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\obj\\",
+        "projectPath": "C:\\Users\\jafet\\Documents\\University\\Progra_avanzada\\TrackerBar-Admin\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api.csproj",
+        "packagesPath": "C:\\Users\\jafet\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jafet\\Documents\\University\\Progra_avanzada\\TrackerBar-Admin\\trackerbar-admin-api\\tracker-bar-admin-api\\tracker-bar-admin-api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\capa6\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\jafet\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -73,7 +73,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }
