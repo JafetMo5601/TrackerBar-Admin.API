@@ -12,8 +12,8 @@ using tracker_bar_admin_api.DataModels;
 namespace tracker_bar_admin_api.Migrations
 {
     [DbContext(typeof(UserAdminContext))]
-    [Migration("20220227165944_Update relationship user-receipt")]
-    partial class Updaterelationshipuserreceipt
+    [Migration("20220227171630_Update relationship receipt-receipttodetail2")]
+    partial class Updaterelationshipreceiptreceipttodetail2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -74,15 +74,10 @@ namespace tracker_bar_admin_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReceiptId"), 1L, 1);
 
-                    b.Property<int>("ReceiptDetailId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ReceiptId");
-
-                    b.HasIndex("ReceiptDetailId");
 
                     b.HasIndex("UserId");
 
@@ -92,10 +87,7 @@ namespace tracker_bar_admin_api.Migrations
             modelBuilder.Entity("tracker_bar_admin_api.DataModels.ReceiptDetail", b =>
                 {
                     b.Property<int>("ReceiptDetailId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReceiptDetailId"), 1L, 1);
 
                     b.Property<float>("Fees")
                         .HasColumnType("real");
@@ -221,19 +213,22 @@ namespace tracker_bar_admin_api.Migrations
 
             modelBuilder.Entity("tracker_bar_admin_api.DataModels.Receipt", b =>
                 {
-                    b.HasOne("tracker_bar_admin_api.DataModels.ReceiptDetail", "ReceiptDetail")
-                        .WithMany("Receipts")
-                        .HasForeignKey("ReceiptDetailId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("tracker_bar_admin_api.DataModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("ReceiptDetail");
-
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("tracker_bar_admin_api.DataModels.ReceiptDetail", b =>
+                {
+                    b.HasOne("tracker_bar_admin_api.DataModels.Receipt", "Receipt")
+                        .WithOne("Detail")
+                        .HasForeignKey("tracker_bar_admin_api.DataModels.ReceiptDetail", "ReceiptDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Receipt");
                 });
 
             modelBuilder.Entity("tracker_bar_admin_api.DataModels.Restaurant", b =>
@@ -267,9 +262,9 @@ namespace tracker_bar_admin_api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("tracker_bar_admin_api.DataModels.ReceiptDetail", b =>
+            modelBuilder.Entity("tracker_bar_admin_api.DataModels.Receipt", b =>
                 {
-                    b.Navigation("Receipts");
+                    b.Navigation("Detail");
                 });
 
             modelBuilder.Entity("tracker_bar_admin_api.DataModels.Restaurant", b =>
