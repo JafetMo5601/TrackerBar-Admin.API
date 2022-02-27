@@ -1,4 +1,4 @@
-﻿namespace tracker_bar_admin_api.DataModels
+﻿/*namespace tracker_bar_admin_api.DataModels
 {
     public class AdminRestaurante
     {
@@ -8,4 +8,4 @@
         public int RestaurantId { get; set; }
         public Restaurant Restaurant { get; set; }
     }
-}
+}*/

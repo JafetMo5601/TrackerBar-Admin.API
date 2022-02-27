@@ -16,7 +16,7 @@ namespace tracker_bar_admin_api.DataModels
         public DbSet<RestaurantDirection> RestaurantDirection { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<AdminRestaurante> AdminRestaurantes { get; set; }
+        // public DbSet<AdminRestaurante> AdminRestaurantes { get; set; }
         public DbSet<Receipt> Receipts { get; set; }
         public DbSet<UserDirection> UserDirections { get; set; }
         public DbSet<UserPhone> UserPhones { get; set; }
