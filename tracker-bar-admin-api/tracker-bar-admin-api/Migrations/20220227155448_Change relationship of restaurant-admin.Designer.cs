@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using tracker_bar_admin_api.DataModels;
 
@@ -11,9 +12,10 @@ using tracker_bar_admin_api.DataModels;
 namespace tracker_bar_admin_api.Migrations
 {
     [DbContext(typeof(UserAdminContext))]
-    partial class UserAdminContextModelSnapshot : ModelSnapshot
+    [Migration("20220227155448_Change relationship of restaurant-admin")]
+    partial class Changerelationshipofrestaurantadmin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
