@@ -32,7 +32,6 @@ namespace tracker_bar_admin_api
             services.AddControllers();
             services.AddDbContext<UserAdminContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("UserAdminPortalDB")));
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "tracker_bar_admin_api", Version = "v1" });

@@ -12,8 +12,8 @@ using tracker_bar_admin_api.DataModels;
 namespace tracker_bar_admin_api.Migrations
 {
     [DbContext(typeof(UserAdminContext))]
-    [Migration("20220226231029_Initialize DB.")]
-    partial class InitializeDB
+    [Migration("20220302020629_Add role to user")]
+    partial class Addroletouser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,29 +23,6 @@ namespace tracker_bar_admin_api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("tracker_bar_admin_api.DataModels.AdminRestaurante", b =>
-                {
-                    b.Property<int>("AdminRestauranteId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdminRestauranteId"), 1L, 1);
-
-                    b.Property<int>("RestaurantId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AdminRestauranteId");
-
-                    b.HasIndex("RestaurantId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AdminRestaurante");
-                });
 
             modelBuilder.Entity("tracker_bar_admin_api.DataModels.Direction", b =>
                 {
@@ -58,7 +35,12 @@ namespace tracker_bar_admin_api.Migrations
                     b.Property<string>("DirectionDescription")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("DirectionId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Directions");
                 });
@@ -74,7 +56,12 @@ namespace tracker_bar_admin_api.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("PhoneId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Phone");
                 });
@@ -87,28 +74,20 @@ namespace tracker_bar_admin_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReceiptId"), 1L, 1);
 
-                    b.Property<int>("ReceiptDetailId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ReceiptId");
 
-                    b.HasIndex("ReceiptDetailId");
-
                     b.HasIndex("UserId");
 
-                    b.ToTable("Receipt");
+                    b.ToTable("Receipts");
                 });
 
             modelBuilder.Entity("tracker_bar_admin_api.DataModels.ReceiptDetail", b =>
                 {
                     b.Property<int>("ReceiptDetailId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReceiptDetailId"), 1L, 1);
 
                     b.Property<float>("Fees")
                         .HasColumnType("real");
@@ -150,7 +129,12 @@ namespace tracker_bar_admin_api.Migrations
                     b.Property<int>("TableQty")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("RestaurantId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Restaurants");
                 });
@@ -171,10 +155,13 @@ namespace tracker_bar_admin_api.Migrations
             modelBuilder.Entity("tracker_bar_admin_api.DataModels.Role", b =>
                 {
                     b.Property<int>("RoleId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("RoleDescription")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"), 1L, 1);
+
+                    b.Property<string>("RoleDescription")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("RoleId");
 
@@ -204,91 +191,59 @@ namespace tracker_bar_admin_api.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("tracker_bar_admin_api.DataModels.UserDirection", b =>
+            modelBuilder.Entity("tracker_bar_admin_api.DataModels.Direction", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("DirectionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DirectionId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserDirection");
-                });
-
-            modelBuilder.Entity("tracker_bar_admin_api.DataModels.UserPhone", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("PhoneId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PhoneId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserPhone");
-                });
-
-            modelBuilder.Entity("tracker_bar_admin_api.DataModels.AdminRestaurante", b =>
-                {
-                    b.HasOne("tracker_bar_admin_api.DataModels.Restaurant", "Restaurant")
-                        .WithMany("AdminRestaurantes")
-                        .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("tracker_bar_admin_api.DataModels.User", "User")
-                        .WithMany("AdminRestaurantes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
-                    b.Navigation("Restaurant");
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("tracker_bar_admin_api.DataModels.Phone", b =>
+                {
+                    b.HasOne("tracker_bar_admin_api.DataModels.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("tracker_bar_admin_api.DataModels.Receipt", b =>
                 {
-                    b.HasOne("tracker_bar_admin_api.DataModels.ReceiptDetail", "ReceiptDetail")
-                        .WithMany("Receipts")
-                        .HasForeignKey("ReceiptDetailId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("tracker_bar_admin_api.DataModels.User", "User")
-                        .WithMany("Receipts")
-                        .HasForeignKey("UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("tracker_bar_admin_api.DataModels.ReceiptDetail", b =>
+                {
+                    b.HasOne("tracker_bar_admin_api.DataModels.Receipt", "Receipt")
+                        .WithOne("Detail")
+                        .HasForeignKey("tracker_bar_admin_api.DataModels.ReceiptDetail", "ReceiptDetailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ReceiptDetail");
+                    b.Navigation("Receipt");
+                });
+
+            modelBuilder.Entity("tracker_bar_admin_api.DataModels.Restaurant", b =>
+                {
+                    b.HasOne("tracker_bar_admin_api.DataModels.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -304,88 +259,23 @@ namespace tracker_bar_admin_api.Migrations
                     b.Navigation("Restaurant");
                 });
 
-            modelBuilder.Entity("tracker_bar_admin_api.DataModels.Role", b =>
+            modelBuilder.Entity("tracker_bar_admin_api.DataModels.User", b =>
                 {
-                    b.HasOne("tracker_bar_admin_api.DataModels.User", "User")
-                        .WithOne("Role")
-                        .HasForeignKey("tracker_bar_admin_api.DataModels.Role", "RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("tracker_bar_admin_api.DataModels.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId");
 
-                    b.Navigation("User");
+                    b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("tracker_bar_admin_api.DataModels.UserDirection", b =>
+            modelBuilder.Entity("tracker_bar_admin_api.DataModels.Receipt", b =>
                 {
-                    b.HasOne("tracker_bar_admin_api.DataModels.Direction", "Direction")
-                        .WithMany("UserDirections")
-                        .HasForeignKey("DirectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("tracker_bar_admin_api.DataModels.User", "User")
-                        .WithMany("Directions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Direction");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("tracker_bar_admin_api.DataModels.UserPhone", b =>
-                {
-                    b.HasOne("tracker_bar_admin_api.DataModels.Phone", "Phone")
-                        .WithMany("UserPhones")
-                        .HasForeignKey("PhoneId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("tracker_bar_admin_api.DataModels.User", "User")
-                        .WithMany("Phones")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Phone");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("tracker_bar_admin_api.DataModels.Direction", b =>
-                {
-                    b.Navigation("UserDirections");
-                });
-
-            modelBuilder.Entity("tracker_bar_admin_api.DataModels.Phone", b =>
-                {
-                    b.Navigation("UserPhones");
-                });
-
-            modelBuilder.Entity("tracker_bar_admin_api.DataModels.ReceiptDetail", b =>
-                {
-                    b.Navigation("Receipts");
+                    b.Navigation("Detail");
                 });
 
             modelBuilder.Entity("tracker_bar_admin_api.DataModels.Restaurant", b =>
                 {
-                    b.Navigation("AdminRestaurantes");
-
                     b.Navigation("Direction");
-                });
-
-            modelBuilder.Entity("tracker_bar_admin_api.DataModels.User", b =>
-                {
-                    b.Navigation("AdminRestaurantes");
-
-                    b.Navigation("Directions");
-
-                    b.Navigation("Phones");
-
-                    b.Navigation("Receipts");
-
-                    b.Navigation("Role");
                 });
 #pragma warning restore 612, 618
         }
