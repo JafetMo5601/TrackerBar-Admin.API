@@ -11,7 +11,6 @@ namespace tracker_bar_admin_api.DataModels
         public float SubtotalPrice { get; set; }
         public int PeopleQty { get; set; }
         public float Fees { get; set; }
-        //public IList<Receipt> Receipts { get; set; }
         public virtual Receipt Receipt { get; set; }
     }
 }

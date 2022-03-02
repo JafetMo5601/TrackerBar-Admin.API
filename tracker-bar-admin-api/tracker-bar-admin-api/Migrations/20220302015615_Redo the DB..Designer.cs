@@ -12,8 +12,8 @@ using tracker_bar_admin_api.DataModels;
 namespace tracker_bar_admin_api.Migrations
 {
     [DbContext(typeof(UserAdminContext))]
-    [Migration("20220227171630_Update relationship receipt-receipttodetail2")]
-    partial class Updaterelationshipreceiptreceipttodetail2
+    [Migration("20220302015615_Redo the DB.")]
+    partial class RedotheDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -155,12 +155,20 @@ namespace tracker_bar_admin_api.Migrations
             modelBuilder.Entity("tracker_bar_admin_api.DataModels.Role", b =>
                 {
                     b.Property<int>("RoleId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("RoleDescription")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"), 1L, 1);
+
+                    b.Property<string>("RoleDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("RoleId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Roles");
                 });
@@ -254,10 +262,8 @@ namespace tracker_bar_admin_api.Migrations
             modelBuilder.Entity("tracker_bar_admin_api.DataModels.Role", b =>
                 {
                     b.HasOne("tracker_bar_admin_api.DataModels.User", "User")
-                        .WithOne("Role")
-                        .HasForeignKey("tracker_bar_admin_api.DataModels.Role", "RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -270,11 +276,6 @@ namespace tracker_bar_admin_api.Migrations
             modelBuilder.Entity("tracker_bar_admin_api.DataModels.Restaurant", b =>
                 {
                     b.Navigation("Direction");
-                });
-
-            modelBuilder.Entity("tracker_bar_admin_api.DataModels.User", b =>
-                {
-                    b.Navigation("Role");
                 });
 #pragma warning restore 612, 618
         }

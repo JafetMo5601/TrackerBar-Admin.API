@@ -13,10 +13,6 @@ namespace tracker_bar_admin_api.DataModels
         public string Email { get; set; }
         public string Password { get; set; }
         public DateTime BirthDate { get; set;  }
-        // public IList<AdminRestaurante> AdminRestaurantes { get; set; }
-        //public IList<UserDirection> Directions { get; set; }
-       //public IList<UserPhone> Phones { get; set; }
-        //public IList<Receipt> Receipts { get; set; }
-        public virtual Role Role { get; set; }
+        public Role Role { get; set; }
     }
 }
