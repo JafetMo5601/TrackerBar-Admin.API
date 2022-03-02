@@ -181,3 +181,4 @@ C:\Users\Andres\Desktop\Progra\trackerbar-admin-api\tracker-bar-admin-api\tracke
 C:\Users\Andres\Desktop\Progra\trackerbar-admin-api\tracker-bar-admin-api\tracker-bar-admin-api\obj\Debug\net6.0\ref\tracker-bar-admin-api.dll
 C:\Users\Andres\Desktop\Progra\trackerbar-admin-api\tracker-bar-admin-api\tracker-bar-admin-api\obj\Debug\net6.0\tracker-bar-admin-api.pdb
 C:\Users\Andres\Desktop\Progra\trackerbar-admin-api\tracker-bar-admin-api\tracker-bar-admin-api\obj\Debug\net6.0\tracker-bar-admin-api.genruntimeconfig.cache
+C:\Users\jafet\Documents\University\Progra_avanzada\TrackerBar-Admin\trackerbar-admin-api\tracker-bar-admin-api\tracker-bar-admin-api\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

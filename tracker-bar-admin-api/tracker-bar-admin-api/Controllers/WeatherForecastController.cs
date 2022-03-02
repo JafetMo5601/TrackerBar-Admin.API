@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace tracker_bar_admin_api.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet,Authorize]
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
