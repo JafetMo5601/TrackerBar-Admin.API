@@ -13,7 +13,6 @@ namespace tracker_bar_admin_api.DataModels
         public int TableQty { get; set; }
         public int EmployeeQty { get; set; }
         public string Phone { get; set; }
-        // public IList<AdminRestaurante> AdminRestaurantes { get; set; }
         public User User { get; set; }
         public virtual RestaurantDirection Direction { get; set; }
     }

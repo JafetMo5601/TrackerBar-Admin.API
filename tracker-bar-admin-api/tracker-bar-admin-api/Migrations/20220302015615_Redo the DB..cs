@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace tracker_bar_admin_api.Migrations
 {
-    public partial class Updaterelationshipreceiptreceipttodetail2 : Migration
+    public partial class RedotheDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -109,18 +109,19 @@ namespace tracker_bar_admin_api.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    RoleDescription = table.Column<int>(type: "int", nullable: false)
+                    RoleId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.RoleId);
                     table.ForeignKey(
-                        name: "FK_Roles_User_RoleId",
-                        column: x => x.RoleId,
+                        name: "FK_Roles_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -180,6 +181,11 @@ namespace tracker_bar_admin_api.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Restaurants_UserId",
                 table: "Restaurants",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Roles_UserId",
+                table: "Roles",
                 column: "UserId");
         }
 
