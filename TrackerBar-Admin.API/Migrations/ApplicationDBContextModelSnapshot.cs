@@ -228,6 +228,12 @@ namespace TrackerBar_Admin.API.Migrations
                     b.Property<int>("PeopleQty")
                         .HasColumnType("int");
 
+                    b.Property<int>("ReceiptId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RestaurantId")
+                        .HasColumnType("int");
+
                     b.Property<float>("SubtotalPrice")
                         .HasColumnType("real");
 
@@ -235,6 +241,8 @@ namespace TrackerBar_Admin.API.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ReceiptDetailId");
+
+                    b.HasIndex("RestaurantId");
 
                     b.ToTable("ReceiptDetail");
                 });
@@ -451,7 +459,15 @@ namespace TrackerBar_Admin.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TrackerBar_Admin.API.DataModels.Restaurant", "Restaurant")
+                        .WithMany()
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Receipt");
+
+                    b.Navigation("Restaurant");
                 });
 
             modelBuilder.Entity("TrackerBar_Admin.API.DataModels.Restaurant", b =>
