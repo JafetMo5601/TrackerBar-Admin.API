@@ -10,6 +10,6 @@
         public int EmployeeQty { get; set; }
         public string Phone { get; set; }
         public User User { get; set; }
-        public virtual RestaurantDirection Direction { get; set; }
+        public RestaurantDirection Direction { get; set; }
     }
 }

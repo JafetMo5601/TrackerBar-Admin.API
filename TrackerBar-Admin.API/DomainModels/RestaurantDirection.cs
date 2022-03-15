@@ -7,6 +7,8 @@ namespace TrackerBar_Admin.API.DomainModels
         [ForeignKey("Restaurant")]
         public int RestaurantDirectionId { get; set; }
         public string Direction { get; set; }
-        public virtual Restaurant Restaurant { get; set; }
+
+        public int RestaurantId { get; set; }
+        public Restaurant Restaurant { get; set; }
     }
 }

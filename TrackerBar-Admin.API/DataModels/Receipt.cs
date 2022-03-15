@@ -4,6 +4,6 @@
     {
         public int ReceiptId { get; set; }
         public User User { get; set; }
-        public virtual ReceiptDetail Detail { get; set; }
+        public ReceiptDetail Detail { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace TrackerBar_Admin.API.DomainModels
         public float SubtotalPrice { get; set; }
         public int PeopleQty { get; set; }
         public float Fees { get; set; }
-        public virtual Receipt Receipt { get; set; }
+        public int ReceiptId { get; set; }
+        public Receipt Receipt { get; set; }
     }
 }

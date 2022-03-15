@@ -15,7 +15,9 @@ ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("Conn")));
 
+// Subscribe new repositories to the API
 builder.Services.AddScoped<IRestaurantRepository, SQLRestaurantRepository>();
+builder.Services.AddScoped<ITableRepository, SQLTableRepository>();
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDBContext>()
