@@ -50,6 +50,7 @@ namespace TrackerBar_Admin.API.Controllers
 
                 return Ok(new
                 {
+                    id = user.Id,
                     userName = user.UserName,
                     userEmail = user.Email,
                     userFirst = user.Name,
