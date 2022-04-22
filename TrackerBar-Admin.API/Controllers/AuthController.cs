@@ -148,5 +148,17 @@ namespace TrackerBar_Admin.API.Controllers
 
             return token;
         }
+
+        //update perfil
+        [HttpPut]
+        [Route("update-profile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] ProfileUser model)
+        {
+            foreach ( User d in model)
+            {
+                
+            }
+            return Ok();
+        }
     }
 }
