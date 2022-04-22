@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace TrackerBar_Admin.API.DataModels
 {
     public class RestaurantDirection
     {
-        [ForeignKey("Restaurant")]
+        [Key]
         public int RestaurantDirectionId { get; set; }
         public string Direction { get; set; }
+
         public int RestaurantId { get; set; }
         public Restaurant Restaurant { get; set; }
     }
