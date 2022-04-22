@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TrackerBar_Admin.API.Migrations
 {
-    public partial class InitiateDB : Migration
+    public partial class initiatedatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,9 +28,9 @@ namespace TrackerBar_Admin.API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Last = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Last = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -241,20 +241,29 @@ namespace TrackerBar_Admin.API.Migrations
                 name: "ReceiptDetail",
                 columns: table => new
                 {
-                    ReceiptDetailId = table.Column<int>(type: "int", nullable: false),
+                    ReceiptDetailId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     TableNumber = table.Column<int>(type: "int", nullable: false),
                     SubtotalPrice = table.Column<float>(type: "real", nullable: false),
                     PeopleQty = table.Column<int>(type: "int", nullable: false),
-                    Fees = table.Column<float>(type: "real", nullable: false)
+                    Fees = table.Column<float>(type: "real", nullable: false),
+                    RestaurantId = table.Column<int>(type: "int", nullable: false),
+                    ReceiptId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ReceiptDetail", x => x.ReceiptDetailId);
                     table.ForeignKey(
-                        name: "FK_ReceiptDetail_Receipt_ReceiptDetailId",
-                        column: x => x.ReceiptDetailId,
+                        name: "FK_ReceiptDetail_Receipt_ReceiptId",
+                        column: x => x.ReceiptId,
                         principalTable: "Receipt",
                         principalColumn: "ReceiptId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReceiptDetail_Restaurant_RestaurantId",
+                        column: x => x.RestaurantId,
+                        principalTable: "Restaurant",
+                        principalColumn: "RestaurantId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -262,15 +271,17 @@ namespace TrackerBar_Admin.API.Migrations
                 name: "RestaurantDirection",
                 columns: table => new
                 {
-                    RestaurantDirectionId = table.Column<int>(type: "int", nullable: false),
-                    Direction = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    RestaurantDirectionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Direction = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RestaurantId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RestaurantDirection", x => x.RestaurantDirectionId);
                     table.ForeignKey(
-                        name: "FK_RestaurantDirection_Restaurant_RestaurantDirectionId",
-                        column: x => x.RestaurantDirectionId,
+                        name: "FK_RestaurantDirection_Restaurant_RestaurantId",
+                        column: x => x.RestaurantId,
                         principalTable: "Restaurant",
                         principalColumn: "RestaurantId",
                         onDelete: ReferentialAction.Cascade);
@@ -331,9 +342,26 @@ namespace TrackerBar_Admin.API.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ReceiptDetail_ReceiptId",
+                table: "ReceiptDetail",
+                column: "ReceiptId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReceiptDetail_RestaurantId",
+                table: "ReceiptDetail",
+                column: "RestaurantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Restaurant_UserId",
                 table: "Restaurant",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RestaurantDirection_RestaurantId",
+                table: "RestaurantDirection",
+                column: "RestaurantId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

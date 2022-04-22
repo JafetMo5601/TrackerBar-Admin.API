@@ -12,8 +12,8 @@ using TrackerBar_Admin.API.DB;
 namespace TrackerBar_Admin.API.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20220314002047_Update_relation_receipt")]
-    partial class Update_relation_receipt
+    [Migration("20220422005700_initiate-database")]
+    partial class initiatedatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -222,7 +222,10 @@ namespace TrackerBar_Admin.API.Migrations
             modelBuilder.Entity("TrackerBar_Admin.API.DataModels.ReceiptDetail", b =>
                 {
                     b.Property<int>("ReceiptDetailId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReceiptDetailId"), 1L, 1);
 
                     b.Property<float>("Fees")
                         .HasColumnType("real");
@@ -243,6 +246,9 @@ namespace TrackerBar_Admin.API.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ReceiptDetailId");
+
+                    b.HasIndex("ReceiptId")
+                        .IsUnique();
 
                     b.HasIndex("RestaurantId");
 
@@ -287,13 +293,22 @@ namespace TrackerBar_Admin.API.Migrations
             modelBuilder.Entity("TrackerBar_Admin.API.DataModels.RestaurantDirection", b =>
                 {
                     b.Property<int>("RestaurantDirectionId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RestaurantDirectionId"), 1L, 1);
 
                     b.Property<string>("Direction")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RestaurantId")
+                        .HasColumnType("int");
+
                     b.HasKey("RestaurantDirectionId");
+
+                    b.HasIndex("RestaurantId")
+                        .IsUnique();
 
                     b.ToTable("RestaurantDirection");
                 });
@@ -321,6 +336,7 @@ namespace TrackerBar_Admin.API.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Last")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -330,6 +346,7 @@ namespace TrackerBar_Admin.API.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
@@ -341,6 +358,7 @@ namespace TrackerBar_Admin.API.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
@@ -456,8 +474,8 @@ namespace TrackerBar_Admin.API.Migrations
             modelBuilder.Entity("TrackerBar_Admin.API.DataModels.ReceiptDetail", b =>
                 {
                     b.HasOne("TrackerBar_Admin.API.DataModels.Receipt", "Receipt")
-                        .WithOne("Detail")
-                        .HasForeignKey("TrackerBar_Admin.API.DataModels.ReceiptDetail", "ReceiptDetailId")
+                        .WithOne("ReeceiptDetail")
+                        .HasForeignKey("TrackerBar_Admin.API.DataModels.ReceiptDetail", "ReceiptId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -484,8 +502,8 @@ namespace TrackerBar_Admin.API.Migrations
             modelBuilder.Entity("TrackerBar_Admin.API.DataModels.RestaurantDirection", b =>
                 {
                     b.HasOne("TrackerBar_Admin.API.DataModels.Restaurant", "Restaurant")
-                        .WithOne("Direction")
-                        .HasForeignKey("TrackerBar_Admin.API.DataModels.RestaurantDirection", "RestaurantDirectionId")
+                        .WithOne("RestaurantDirection")
+                        .HasForeignKey("TrackerBar_Admin.API.DataModels.RestaurantDirection", "RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -494,13 +512,13 @@ namespace TrackerBar_Admin.API.Migrations
 
             modelBuilder.Entity("TrackerBar_Admin.API.DataModels.Receipt", b =>
                 {
-                    b.Navigation("Detail")
+                    b.Navigation("ReeceiptDetail")
                         .IsRequired();
                 });
 
             modelBuilder.Entity("TrackerBar_Admin.API.DataModels.Restaurant", b =>
                 {
-                    b.Navigation("Direction")
+                    b.Navigation("RestaurantDirection")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

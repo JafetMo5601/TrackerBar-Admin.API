@@ -57,8 +57,8 @@ namespace TrackerBar_Admin.API.Controllers
                     },
                     Direction = new RestaurantDirection()
                     {
-                        RestaurantDirectionId = restaurant.Direction.RestaurantDirectionId,
-                        Direction = restaurant.Direction.Direction
+                        RestaurantDirectionId = restaurant.RestaurantDirection.RestaurantDirectionId,
+                        Direction = restaurant.RestaurantDirection.Direction
                     }
                 });
             }
