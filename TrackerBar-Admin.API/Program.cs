@@ -17,6 +17,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 // Subscribe new repositories to the API
 builder.Services.AddScoped<IRestaurantRepository, SQLRestaurantRepository>();
 builder.Services.AddScoped<ITableRepository, SQLTableRepository>();
+builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDBContext>()
@@ -46,7 +47,9 @@ builder.Services
         };
     });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+
+    .AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

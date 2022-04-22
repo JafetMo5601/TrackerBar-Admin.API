@@ -12,9 +12,16 @@ namespace TrackerBar_Admin.API.Controllers
     {
         private readonly IRestaurantRepository restaurantRepository;
         private readonly IMapper mapper;
+        private readonly IUserRepository _userRepository;
+        private readonly IRestaurantDirectionRepository _restaurantDirectionRepository;
 
-        public RestaurantController(IRestaurantRepository restaurantRepository, IMapper mapper)
+        public RestaurantController(
+            IRestaurantRepository restaurantRepository,
+            IUserRepository userRepository,
+            IRestaurantDirectionRepository restaurantDirectionRepository,
+            IMapper mapper)
         {
+            _userRepository = userRepository;
             this.restaurantRepository = restaurantRepository;
             this.mapper = mapper;
         }
@@ -53,6 +60,16 @@ namespace TrackerBar_Admin.API.Controllers
                 });
             }
             return Ok(domainModelRestaurants);
+        }
+
+
+        [HttpPut]
+        [Route("update")]
+        public async Task<ActionResult> UpdateRestaurants([FromBody] UpdateRestaurant restaurant)
+        {
+            var restaurants = await restaurantRepository.UpdateRestaurantAsync(restaurant);
+
+            return Ok(restaurants);
         }
     }
 }
