@@ -4,7 +4,7 @@ namespace TrackerBar_Admin.API.Repositories
 {
     public interface IRestaurantDirectionRepository
     {
-        Task<RestaurantDirection> GetRestaurantDirectionByIdAsync(string Direction);
+        Task<RestaurantDirection> GetRestaurantDirectionByIdAsync(int Direction);
 
     }
 }
