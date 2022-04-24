@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TrackerBar_Admin.API.DataModels;
 using TrackerBar_Admin.API.DB;
-using TrackerBar_Admin.API.DomainModels;
 
 namespace TrackerBar_Admin.API.Repositories
 {
@@ -11,25 +10,31 @@ namespace TrackerBar_Admin.API.Repositories
         private readonly IUserRepository _userRepository;
         private readonly IRestaurantDirectionRepository _restaurantDirectionRepository;
 
-        public SQLRestaurantRepository(ApplicationDBContext context, IUserRepository userRepository)
+        public SQLRestaurantRepository(ApplicationDBContext context, IUserRepository userRepository, IRestaurantDirectionRepository restaurantDirectionRepository)
         {
             this.context = context;
             _userRepository = userRepository;
+            _restaurantDirectionRepository = restaurantDirectionRepository;
         }
 
-        public async Task<List<DataModels.Restaurant>> GetRestaurantsAsync() {
-            return await context.Restaurant.Include(nameof(DataModels.User)).Include(nameof(DataModels.Direction)).ToListAsync();
-
+        public async Task<List<Restaurant>> GetRestaurantsAsync() {
+            return await context.Restaurant.Include(nameof(User)).Include(nameof(RestaurantDirection)).ToListAsync();
         }
 
-        public async Task<DataModels.Restaurant> UpdateRestaurantAsync(UpdateRestaurant updateRestaurant)
+        public async Task<Restaurant> GetRestaurantByIdAsync(int restaurantId) {
+            var restaurant = (from R in context.Restaurant
+                              where R.RestaurantId == restaurantId
+                              select R).Include(nameof(User)).Include(nameof(RestaurantDirection)).FirstOrDefault();
+            return restaurant;
+        }
+
+        public async Task<Restaurant> UpdateRestaurantAsync(UpdateRestaurants updateRestaurant)
         {
-
             try
             {
-                var restaurant = (from x in context.Restaurant
+                var restaurant = await (from x in context.Restaurant
                                   where x.RestaurantId == updateRestaurant.RestaurantId
-                                  select x).First();
+                                  select x).FirstAsync();
 
                 if (restaurant != null)
                 {
@@ -39,16 +44,18 @@ namespace TrackerBar_Admin.API.Repositories
                     restaurant.EmployeeQty = updateRestaurant.EmployeeQty;
                     restaurant.Phone = updateRestaurant.Phone;
 
-                    var direction = await _restaurantDirectionRepository.GetRestaurantDirectionByIdAsync(updateRestaurant.Direction);
-                    restaurant.Direction = direction;
-
+                    var newDirection = await _restaurantDirectionRepository.UpdateRestaurantDirectionAsync(updateRestaurant.RestaurantId, updateRestaurant.Direction);
                     var user = await _userRepository.GetUserByIdAsync(updateRestaurant.UserId);
+                    
+                    restaurant.RestaurantDirection = newDirection;
                     restaurant.User = user;
 
                     context.Restaurant.Update(restaurant);
-
                     await context.SaveChangesAsync();
                 }
+
+                restaurant = await GetRestaurantByIdAsync(updateRestaurant.RestaurantId);
+
                 return restaurant;
             }
             catch (Exception ex)
@@ -58,89 +65,35 @@ namespace TrackerBar_Admin.API.Repositories
             }
         }
 
-        public async Task<DataModels.Restaurant> DeleteRestaurantAsync(DeleteRestaurant restaurant)
+        public async Task<Restaurant> DeleteRestaurantAsync(DeleteRestaurant deleteRestaurant)
         {
-
             try
             {
-                var deleteBar = (from x in context.Restaurant
-                                 where x.RestaurantId == restaurant.RestaurantId
-                                 select x).First();
+                var barToDelete = await (from x in context.Restaurant
+                                   where x.RestaurantId == deleteRestaurant.RestaurantId && x.User.Id == deleteRestaurant.UserId
+                                         select x).FirstOrDefaultAsync();
 
-                if (restaurant != null)
+                if (barToDelete != null)
                 {
-                    context.RestaurantDirection.RemoveRange(deleteBar.RestaurantDirection);
-                    context.Restaurant.Remove(deleteBar);
+                    var directionToDelete = (from x in context.RestaurantDirection
+                                             where x.RestaurantId == deleteRestaurant.RestaurantId
+                                             select x).First();
+
+                    context.RestaurantDirection.Remove(directionToDelete);
+                    context.Restaurant.Remove(barToDelete);
 
                     await context.SaveChangesAsync();
+
+                    return barToDelete;
                 }
-                return restaurant;
+                return null;
             }
             catch (Exception ex)
             {
                 context.Dispose();
-                throw ex;
+                return null;
             }
 
         }
-
-        /*public Task<Restaurant> DeleteRestaurantAsync(string nombre, string direccion)
-{
-    var result = (from x in context.Restaurant
-                  where x.Name == nombre && x.Direction == direccion
-                  select x).FirstOrDefault();
-
-    if (result != null)
-    {
-        context.Entry(dep).State = System.Data.Entity.EntityState.Deleted;
-        context.SaveChanges();
-    }
-    context.Dispose();
-
-    return restaurant;
-}*/
-
-
-
-
-        /*var newDirection _restaurantDirectionRepository(restaurant.RestaurantId);
-        newDirection.Direction - updateRestaurant.Direccion
-
-
-        restaurant.Direction = newDirection;*/
-
-
-
-        /*var result = (from x in context.Restaurant
-                         where x.RestaurantId == restaurant.RestaurantId
-                         select x).FirstOrDefault();
-
-        if (result != null)
-        {
-            context.Entry(result).CurrentValues.SetValues(restaurant);
-            context.SaveChanges();
-        }
-        context.Dispose();
-
-        return restaurant;
-
-        /*var result = context.Restaurant.SingleOrDefault(u => u.RestaurantId == restaurant.RestaurantId);
-
-            if (result != null)
-            {
-            context.Entry(result).CurrentValues.SetValues(restaurant);
-            context.SaveChanges();
-            }
-
-        return restaurant;*/
-
-        /*public async Task<DataModels.RestaurantDirection> GetURestaurantDirectionByIdAsync(string Direccion)
-        {
-            var user = (from x in context.RestaurantDirection
-                        where x.RestaurantDirectionId == Direccion
-                        select x).First();
-
-            return user;
-        }*/
     }
 }

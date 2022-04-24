@@ -16,7 +16,7 @@ namespace TrackerBar_Admin.API.DataModels
         [Required(ErrorMessage = "Employees quantity is required")]
         public int EmployeeQty { get; set; }
         public string Phone { get; set; }
-        public int User { get; set; }
+        public string UserId { get; set; }
         public string Direction { get; set; }
     }
 }
