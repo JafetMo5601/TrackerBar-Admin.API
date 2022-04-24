@@ -5,6 +5,7 @@ namespace TrackerBar_Admin.API.Repositories
     public interface IRestaurantRepository
     {
         Task<List<Restaurant>> GetRestaurantsAsync();
-        Task<int> GetReceiptDetailAsync();
+        Task<User> GetReceiptDetailAsync();
+        Task<User> GetUserUpdate();
     }
 }

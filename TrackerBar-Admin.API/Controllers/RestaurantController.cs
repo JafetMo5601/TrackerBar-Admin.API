@@ -27,8 +27,15 @@ namespace TrackerBar_Admin.API.Controllers
 
             return Ok(mesas_dispo);
         }
+        //update user
+        [HttpPut]
+        [Route("actualizarPerfil")]
+        public async Task<IActionResult> GetUserUpdate([FromBody] User updateUser)
+        {
+            var userUp = await restaurantRepository.GetUserUpdate();
+            return Ok(userUp);
+        }
 
-   
         [HttpGet]
         [Route("all")]
         public async Task<IActionResult> GetAllRestaurants() 
