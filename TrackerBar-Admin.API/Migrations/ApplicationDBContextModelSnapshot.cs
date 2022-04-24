@@ -243,6 +243,9 @@ namespace TrackerBar_Admin.API.Migrations
                     b.Property<int>("TableNumber")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("boughtAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("ReceiptDetailId");
 
                     b.HasIndex("ReceiptId")

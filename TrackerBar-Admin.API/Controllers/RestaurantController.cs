@@ -20,20 +20,12 @@ namespace TrackerBar_Admin.API.Controllers
         }
         //reservaciones
         [HttpGet]
-        [Route("reservaciones")]
+        [Route("reservations")]
         public async Task<IActionResult> GetReservaciones()
         {
-            var mesas_dispo = await restaurantRepository.GetReceiptDetailAsync();
+            var mesas_dispo = await restaurantRepository.GetReservationsByIdAsync(1);
 
             return Ok(mesas_dispo);
-        }
-        //update user
-        [HttpPut]
-        [Route("actualizarPerfil")]
-        public async Task<IActionResult> GetUserUpdate([FromBody] User updateUser)
-        {
-            var userUp = await restaurantRepository.GetUserUpdate();
-            return Ok(userUp);
         }
 
         [HttpGet]
