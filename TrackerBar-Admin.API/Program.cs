@@ -16,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 
 // Subscribe new repositories to the API
 builder.Services.AddScoped<IRestaurantRepository, SQLRestaurantRepository>();
+builder.Services.AddScoped<IRestaurantDirectionRepository, SQLRestaurantDIrectionRepository>();
 builder.Services.AddScoped<ITableRepository, SQLTableRepository>();
 builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
 
