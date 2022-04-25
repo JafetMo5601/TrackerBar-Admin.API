@@ -22,12 +22,13 @@ namespace TrackerBar_Admin.API.Controllers
         {
             _userRepository = userRepository;
             _restaurantRepository = restaurantRepository;
+
             this.mapper = mapper;
         }
 
         [HttpGet]
         [Route("all")]
-        public async Task<IActionResult> GetAllRestaurants() 
+        public async Task<IActionResult> GetAllRestaurants()
         {
             var restaurants = await _restaurantRepository.GetRestaurantsAsync();
 
@@ -46,7 +47,7 @@ namespace TrackerBar_Admin.API.Controllers
                     {
                         Id = restaurant.User.Id,
                         Name = restaurant.User.Name,
-                        Last = restaurant.User.Name,
+                        Last = restaurant.User.Last,
                         UserName = restaurant.User.UserName,
                         Email = restaurant.User.Email,
                         BirthDate = restaurant.User.BirthDate
@@ -60,7 +61,6 @@ namespace TrackerBar_Admin.API.Controllers
             }
             return Ok(domainModelRestaurants);
         }
-
 
         [HttpPut]
         [Route("update")]
@@ -98,10 +98,42 @@ namespace TrackerBar_Admin.API.Controllers
         public async Task<IActionResult> DeleteRestaurant([FromBody] DeleteRestaurant model) {
             var result = await _restaurantRepository.DeleteRestaurantAsync(model);
 
-            if (result == null) { 
+            if (result == null) {
                 return BadRequest("User ID or Restaurant ID incorrect.");
             }
             return Ok("Restaurant deleted successfully!");
         }
+
+        [HttpPost]
+        [Route("AddRestaurant")]
+        public async Task<IActionResult> AddRestaurant([FromBody]AddRestaurant newRestaurant)
+        {
+            var user = _userRepository.GetUserAsync(newRestaurant.UserId);
+            var userExists = await _userRepository.GetUserExist(newRestaurant.UserId);
+            var restaurantExists = await _restaurantRepository.GetRestaurantExist(newRestaurant.Name);
+           
+            if(userExists == true && restaurantExists == false)
+            {
+                var restaurant = await _restaurantRepository.AddRestaurant(newRestaurant);
+                return Ok(restaurant);
+            }
+                return BadRequest();  
+        }
+
+        [HttpGet]
+        [Route("yourRestaurants")]
+        public async Task<IActionResult> YourRestaurant([FromBody]AddRestaurant YourRestaurant)
+        {
+            var user = await _userRepository.GetUserAsync(YourRestaurant.UserId);
+            var userExists = await _userRepository.GetUserExist(YourRestaurant.UserId);
+            var restaurantExists = await _restaurantRepository.GetRestaurantExist(YourRestaurant.Name);
+           
+            if (userExists == true && restaurantExists == false)
+            {
+                var restaurant = await _restaurantRepository.GetYourRestaurant(YourRestaurant.Name);
+                return Ok(restaurant);
+            }
+            return BadRequest();
+        }
     }
-}
+ }
