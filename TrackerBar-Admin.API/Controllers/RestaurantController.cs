@@ -22,6 +22,7 @@ namespace TrackerBar_Admin.API.Controllers
         {
             _userRepository = userRepository;
             _restaurantRepository = restaurantRepository;
+            _restaurantDirectionRepository = restaurantDirectionRepository;
 
             this.mapper = mapper;
         }
@@ -105,35 +106,36 @@ namespace TrackerBar_Admin.API.Controllers
         }
 
         [HttpPost]
-        [Route("AddRestaurant")]
+        [Route("create")]
         public async Task<IActionResult> AddRestaurant([FromBody]AddRestaurant newRestaurant)
         {
-            var user = _userRepository.GetUserAsync(newRestaurant.UserId);
-            var userExists = await _userRepository.GetUserExist(newRestaurant.UserId);
-            var restaurantExists = await _restaurantRepository.GetRestaurantExist(newRestaurant.Name);
+            var user = _userRepository.GetUserByIdAsync(newRestaurant.UserId);
+            var restaurantExists = _restaurantRepository.restaurantExist(newRestaurant.RestaurantName);
            
-            if(userExists == true && restaurantExists == false)
+            if(user != null && !restaurantExists)
             {
                 var restaurant = await _restaurantRepository.AddRestaurant(newRestaurant);
-                return Ok(restaurant);
+                await _restaurantDirectionRepository.UpdateRestaurantDirectionAsync(restaurant.RestaurantId, newRestaurant.Direction);
+                var updatedRestaurant = await _restaurantRepository.GetRestaurantByIdAsync(restaurant.RestaurantId);
+
+                return Ok("Restaurant created successfully!");
             }
-                return BadRequest();  
+            return BadRequest("There is already an owned restaurant created with that name!");
         }
 
         [HttpGet]
-        [Route("yourRestaurants")]
-        public async Task<IActionResult> YourRestaurant([FromBody]AddRestaurant YourRestaurant)
+        [Route("owned")]
+        public async Task<IActionResult> YourRestaurant(string UserId, string RestaurantName)
         {
-            var user = await _userRepository.GetUserAsync(YourRestaurant.UserId);
-            var userExists = await _userRepository.GetUserExist(YourRestaurant.UserId);
-            var restaurantExists = await _restaurantRepository.GetRestaurantExist(YourRestaurant.Name);
+            var user = await _userRepository.GetUserByIdAsync(UserId);
+            var restaurantExists = _restaurantRepository.restaurantExist(RestaurantName);
            
-            if (userExists == true && restaurantExists == false)
-            {
-                var restaurant = await _restaurantRepository.GetYourRestaurant(YourRestaurant.Name);
+            if (user != null && restaurantExists) {
+                var restaurant = await _restaurantRepository.GetYourRestaurant(RestaurantName);
+                //return StatusCode(StatusCodes.Status200OK, new Response { Status = "Ok", Message = restaurant.Name + restaurant.Phone});
                 return Ok(restaurant);
             }
-            return BadRequest();
+            return BadRequest("The restaurant does not exists, check the name and user id!");
         }
     }
  }

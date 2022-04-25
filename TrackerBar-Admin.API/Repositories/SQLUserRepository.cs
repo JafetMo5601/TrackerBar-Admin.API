@@ -13,19 +13,19 @@ namespace TrackerBar_Admin.API.Repositories
             this.context = context;
         }
 
-        public async Task<User> GetUserByIdAsync(string UserId)
+        /*public async Task<User> GetUserByIdAsync(string UserId)
         {
             var user = (from x in context.Users
                         where x.Id == UserId
                         select x).First();
             return user;
-        }
+        }*/
 
-        public async Task<User> GetUserAsync(string userId)
+        public async Task<User> GetUserByIdAsync(string userId)
         {
             var result = new User();
 
-            if(GetUserExist(userId).Equals(true))
+            if(userExist(userId))
             {
                 result = (from X in context.Users
                         where X.Id == userId
@@ -33,8 +33,7 @@ namespace TrackerBar_Admin.API.Repositories
 
                 return result;
             }
-            return result;
-            
+            return null;
         }
 
 
@@ -46,7 +45,7 @@ namespace TrackerBar_Admin.API.Repositories
             return result;
         }
 
-        public async Task<bool> GetUserExist(string userId)
+        public bool userExist(string userId)
         {  
             var result = (from X in context.Users
                           where X.Id == userId

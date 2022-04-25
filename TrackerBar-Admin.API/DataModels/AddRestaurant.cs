@@ -2,8 +2,7 @@
 {
     public class AddRestaurant
     {
-        public int RestaurantId { get; set; }
-        public string Name { get; set; }
+        public string RestaurantName { get; set; }
         public int PeopleQty { get; set; }
         public int TableQty { get; set; }
         public int EmployeeQty { get; set; }

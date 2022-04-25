@@ -104,59 +104,50 @@ namespace TrackerBar_Admin.API.Repositories
             return result;
         }
 
-        public async Task<bool> GetRestaurantExist(string RestaurantName)
+        public bool restaurantExist(string RestaurantName)
         {
             var result = (from X in context.Restaurant
                           where X.Name == RestaurantName
                           select X.Name).FirstOrDefault();
+            
             if (result != null)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public async Task<Restaurant> GetYourRestaurant(string RestaurantName)
         {
-            if (GetRestaurantExist(RestaurantName).Equals(true))
+            if (restaurantExist(RestaurantName))
             {
-                return await context.Restaurant.Include(nameof(User)).Include(nameof(Direction)).FirstOrDefaultAsync();
+                return await context.Restaurant.Include(nameof(User)).Include(nameof(RestaurantDirection)).FirstOrDefaultAsync();
             }
             return null;
         }
 
         public async Task<Restaurant> AddRestaurant(AddRestaurant newRestaurant)
         {
-            //var result =   context.Restaurant
-            //              .Select(newRestaurant => new Restaurant
-            //              {
-            //                  RestaurantId = newRestaurant.RestaurantId,
-            //                  Name = newRestaurant.Name,
-            //                  PeopleQty = newRestaurant.PeopleQty,
-            //                  TableQty = newRestaurant.TableQty,
-            //                  Phone = newRestaurant.Phone,
-            //                  User = newRestaurant.User,
-            //                  Direction = newRestaurant.Direction
-            //              }).FirstOrDefault();
-            //                  return result;
+            var user = await _userRepository.GetUserByIdAsync(newRestaurant.UserId);
 
-            Restaurant res = new Restaurant();
-            res.RestaurantId = newRestaurant.RestaurantId;
-            res.Name = newRestaurant.Name;
-            res.PeopleQty = newRestaurant.PeopleQty;
-            res.TableQty = newRestaurant.TableQty;
-            res.Phone = newRestaurant.Phone;
-            res.User.Id = newRestaurant.UserId;
-            res.Direction.Direction = newRestaurant.Direction;
+            if (user != null) {
+                Restaurant res = new Restaurant()
+                {
+                    Name = newRestaurant.RestaurantName,
+                    PeopleQty = newRestaurant.PeopleQty,
+                    TableQty = newRestaurant.TableQty,
+                    Phone = newRestaurant.Phone,
+                    User = user,
+                    RestaurantDirection = null,
+                };
 
-            context.Restaurant.Add(res);
-            context.SaveChanges();
-            return res;
+                await context.Restaurant.AddAsync(res);
+                await context.SaveChangesAsync();
 
+                return res;
+            }
 
+            return null;
         }
     }
 }
