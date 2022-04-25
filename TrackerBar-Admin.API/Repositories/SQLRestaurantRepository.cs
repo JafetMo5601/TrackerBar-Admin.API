@@ -17,15 +17,38 @@ namespace TrackerBar_Admin.API.Repositories
             _restaurantDirectionRepository = restaurantDirectionRepository;
         }
 
-        public async Task<List<Restaurant>> GetRestaurantsAsync() {
+        public async Task<List<Restaurant>> GetRestaurantsAsync()
+        {
+            try
+            {
+
             return await context.Restaurant.Include(nameof(User)).Include(nameof(RestaurantDirection)).ToListAsync();
+
+            }
+            catch (Exception ex)
+            {
+                context.Dispose();
+                throw ex;
+            }
         }
 
-        public async Task<Restaurant> GetRestaurantByIdAsync(int restaurantId) {
-            var restaurant = (from R in context.Restaurant
-                              where R.RestaurantId == restaurantId
-                              select R).Include(nameof(User)).Include(nameof(RestaurantDirection)).FirstOrDefault();
-            return restaurant;
+        public async Task<Restaurant> GetRestaurantByIdAsync(int restaurantId)
+        {
+            try
+            {
+
+                var restaurant = (from R in context.Restaurant
+                                  where R.RestaurantId == restaurantId
+                                  select R).Include(nameof(User)).Include(nameof(RestaurantDirection)).FirstOrDefault();
+                return restaurant;
+
+            }
+            catch (Exception ex)
+            {
+                context.Dispose();
+                throw ex;
+            }
+
         }
 
         public async Task<Restaurant> UpdateRestaurantAsync(UpdateRestaurants updateRestaurant)
@@ -33,8 +56,8 @@ namespace TrackerBar_Admin.API.Repositories
             try
             {
                 var restaurant = await (from x in context.Restaurant
-                                  where x.RestaurantId == updateRestaurant.RestaurantId
-                                  select x).FirstAsync();
+                                        where x.RestaurantId == updateRestaurant.RestaurantId
+                                        select x).FirstAsync();
 
                 if (restaurant != null)
                 {
@@ -46,7 +69,7 @@ namespace TrackerBar_Admin.API.Repositories
 
                     var newDirection = await _restaurantDirectionRepository.UpdateRestaurantDirectionAsync(updateRestaurant.RestaurantId, updateRestaurant.Direction);
                     var user = await _userRepository.GetUserByIdAsync(updateRestaurant.UserId);
-                    
+
                     restaurant.RestaurantDirection = newDirection;
                     restaurant.User = user;
 
@@ -64,7 +87,7 @@ namespace TrackerBar_Admin.API.Repositories
                 throw ex;
             }
         }
-
+        
         public async Task<Restaurant> DeleteRestaurantAsync(DeleteRestaurant deleteRestaurant)
         {
             try
@@ -94,60 +117,101 @@ namespace TrackerBar_Admin.API.Repositories
                 return null;
             }
         }
-
+        //gets restaurant's name from database
         public async Task<string> GetNameRestaurant(string RestaurantName)
         {
-            var result = (from X in context.Restaurant
-                          where X.Name == RestaurantName
-                          select X.Name).First();
+            try
+            {
+                var result = (from X in context.Restaurant
+                              where X.Name == RestaurantName
+                              select X.Name).First();
 
-            return result;
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                context.Dispose();
+                throw ex;
+            }
+
         }
-
+        //ask if restaurant already exists or not in the database
         public bool restaurantExist(string RestaurantName)
         {
-            var result = (from X in context.Restaurant
-                          where X.Name == RestaurantName
-                          select X.Name).FirstOrDefault();
-            
-            if (result != null)
+            try
             {
-                return true;
-            }
-            return false;
-        }
+                var result = (from X in context.Restaurant
+                              where X.Name == RestaurantName
+                              select X.Name).FirstOrDefault();
 
+                if (result != null)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                context.Dispose();
+                throw ex;
+            }
+
+        }
+        //shows owned restaurant to owner, apppears one who has same name as parameter
         public async Task<Restaurant> GetYourRestaurant(string RestaurantName)
         {
-            if (restaurantExist(RestaurantName))
+            try
             {
-                return await context.Restaurant.Include(nameof(User)).Include(nameof(RestaurantDirection)).FirstOrDefaultAsync();
+                //validates if restaurant already exists in database
+                if (restaurantExist(RestaurantName))
+                {
+                    return await context.Restaurant.Include(nameof(User)).Include(nameof(RestaurantDirection)).FirstOrDefaultAsync();
+                }
+                return null;
             }
-            return null;
+            catch (Exception ex)
+            {
+                context.Dispose();
+                throw ex;
+            }
         }
 
+        //Add new restaurant to database
         public async Task<Restaurant> AddRestaurant(AddRestaurant newRestaurant)
         {
-            var user = await _userRepository.GetUserByIdAsync(newRestaurant.UserId);
 
-            if (user != null) {
-                Restaurant res = new Restaurant()
+            try
+            {
+                var user = await _userRepository.GetUserByIdAsync(newRestaurant.UserId);
+
+                if (user != null)
                 {
-                    Name = newRestaurant.RestaurantName,
-                    PeopleQty = newRestaurant.PeopleQty,
-                    TableQty = newRestaurant.TableQty,
-                    Phone = newRestaurant.Phone,
-                    User = user,
-                    RestaurantDirection = null,
-                };
+                    //create new restaurant
+                    Restaurant res = new Restaurant()
+                    {
+                        Name = newRestaurant.RestaurantName,
+                        PeopleQty = newRestaurant.PeopleQty,
+                        TableQty = newRestaurant.TableQty,
+                        Phone = newRestaurant.Phone,
+                        User = user,
+                        RestaurantDirection = null,
+                    };
 
-                await context.Restaurant.AddAsync(res);
-                await context.SaveChangesAsync();
+                    //add newRestaurant to database
+                    await context.Restaurant.AddAsync(res);
+                    await context.SaveChangesAsync();
 
-                return res;
+                    return res;
+                }
+
+                    return null;
             }
-
-            return null;
+            catch (Exception ex)
+            {
+                context.Dispose();
+                throw ex;
+            }
         }
     }
 }
