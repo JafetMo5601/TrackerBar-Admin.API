@@ -2,8 +2,8 @@
 
 namespace TrackerBar_Admin.API.Repositories
 {
-    public interface IRestaurantRepository
+    public interface IUserRepository
     {
-        Task<List<Restaurant>> GetRestaurantsAsync();
+        Task<User> GetUserByIdAsync(string UserId);
     }
 }

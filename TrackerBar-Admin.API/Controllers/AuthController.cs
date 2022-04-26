@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TrackerBar_Admin.API.DataModels;
+using TrackerBar_Admin.API.Repositories;
 
 namespace TrackerBar_Admin.API.Controllers
 {
@@ -14,9 +15,11 @@ namespace TrackerBar_Admin.API.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IUserRepository _userRepository;
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public AuthController(
+            IUserRepository userRepository,
             UserManager<User> userManager,
             IConfiguration configuration,
             RoleManager<IdentityRole> roleManager)
@@ -24,6 +27,7 @@ namespace TrackerBar_Admin.API.Controllers
             _userManager = userManager;
             _configuration = configuration;
             _roleManager = roleManager;
+            _userRepository = userRepository;
         }
 
         [HttpPost]
@@ -134,6 +138,18 @@ namespace TrackerBar_Admin.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Interal error asigning the roles.", Error = result.ToString() });
             }
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+        }
+
+        [HttpGet]
+        [Route("user")]
+        public async Task<IActionResult> Login(string userId)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            return BadRequest();
         }
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)
