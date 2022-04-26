@@ -6,6 +6,7 @@ namespace TrackerBar_Admin.API.Repositories
 {
     public class SQLRestaurantRepository : IRestaurantRepository
     {
+          
         private readonly ApplicationDBContext context;
         private readonly IUserRepository _userRepository;
         private readonly IRestaurantDirectionRepository _restaurantDirectionRepository;

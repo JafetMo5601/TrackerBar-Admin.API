@@ -16,7 +16,7 @@ namespace TrackerBar_Admin.API.DB
         public DbSet<ReceiptDetail> ReceiptDetail { get; set; }
         public DbSet<RestaurantDirection> RestaurantDirection { get; set; }
         public DbSet<Restaurant> Restaurant { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> User { get; set; }
         public DbSet<Receipt> Receipt { get; set; }
     }
 }
