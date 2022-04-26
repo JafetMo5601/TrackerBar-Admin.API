@@ -231,28 +231,40 @@ namespace TrackerBar_Admin.API.Repositories
                 var restaurantsOwned = await (from R in context.Restaurant
                                               join RD in context.RestaurantDirection on R.RestaurantId equals RD.RestaurantId
                                               where R.User.Id == userId
-                                              select new { R.RestaurantId, R.Name, RD.Direction}).ToListAsync();
+                                              select new YourRestaurantsResponse(){ id = R.RestaurantId, name = R.Name }).ToListAsync();
 
-                if (restaurantsOwned != null) { 
-                    var restaurantsToReturn = new List<YourRestaurantsResponse>();
-
-                    foreach (var restaurant in restaurantsOwned) {
-                        restaurantsToReturn.Add(new YourRestaurantsResponse()
-                        {
-                            id = restaurant.RestaurantId,
-                            name = restaurant.Name,
-                            address = restaurant.Direction
-                        });
-                    }
-
-
-                    return restaurantsToReturn;
+                if (restaurantsOwned != null) {                
+                    return restaurantsOwned;
                 }
                 return null;
             }
             catch (Exception ex)
             {
                 context.Dispose();
+                return null;
+            }
+        }
+
+        public async Task<List<ReservationResponse>> GetReservationsByIdAsync(int restaurantId)
+        {
+            try
+            {
+                var reservations = await (from RD in context.ReceiptDetail
+                                    join R in context.Receipt on RD.ReceiptId equals R.ReceiptId
+                                    join U in context.User on R.User.Id equals U.Id
+                                    select new ReservationResponse(){
+                                        id = RD.ReceiptDetailId,
+                                        owner = U.Name + " " + U.Last,
+                                        details = "Table #" + RD.TableNumber + " for " + RD.PeopleQty + " people.",
+                                        date = RD.boughtAt,
+                                    }).ToListAsync();
+
+                if (reservations != null) { 
+                    return reservations;
+                }
+                return null;
+            }
+            catch (Exception ex) {
                 return null;
             }
         }
