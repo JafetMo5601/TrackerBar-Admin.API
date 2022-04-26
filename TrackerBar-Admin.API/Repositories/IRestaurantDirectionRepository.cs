@@ -6,6 +6,7 @@ namespace TrackerBar_Admin.API.Repositories
     {
         Task<RestaurantDirection> UpdateRestaurantDirectionAsync(int restaurantId, string direction);
         Task<RestaurantDirection> GetRestaurantDirectionAsync(int restaurantId);
+        Task<RestaurantDirection> createRestaurantDirection(int restaurantId, string direction);
 
     }
 }
