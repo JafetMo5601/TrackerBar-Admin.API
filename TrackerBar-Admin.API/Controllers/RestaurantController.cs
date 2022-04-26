@@ -29,11 +29,11 @@ namespace TrackerBar_Admin.API.Controllers
         //reservaciones
         [HttpGet]
         [Route("reservations")]
-        public async Task<IActionResult> GetReservaciones()
+        public async Task<IActionResult> GetReservaciones(int restaurantId)
         {
-            var mesas_dispo = await restaurantRepository.GetReservationsByIdAsync(1);
+            var reservations = await _restaurantRepository.GetReservationsByIdAsync(restaurantId);
 
-            return Ok(mesas_dispo);
+            return Ok(reservations);
         }
 
         [HttpGet]

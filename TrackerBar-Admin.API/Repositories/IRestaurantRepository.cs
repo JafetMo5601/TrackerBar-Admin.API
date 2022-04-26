@@ -13,5 +13,6 @@ namespace TrackerBar_Admin.API.Repositories
         Task<Restaurant> GetYourRestaurant(string RestaurantName);
         Task<Restaurant> AddRestaurant(AddRestaurant newRestaurant);
         Task<List<YourRestaurantsResponse>> GetYourRestaurantsAsync(string userId);
+        Task<List<ReservationResponse>> GetReservationsByIdAsync(int restaurantId);
     }
 }
