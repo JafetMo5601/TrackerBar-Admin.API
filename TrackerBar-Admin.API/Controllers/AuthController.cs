@@ -166,15 +166,25 @@ namespace TrackerBar_Admin.API.Controllers
 
             return token;
         }
-
+        
         [HttpPut]
         [Route("profile/update")]
         public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfile model)
         {
 
-            var updateProfile = await _userRepository.UpdatedProfileAsync();
-                        
-            return (IActionResult)updateProfile;
+            try
+            {
+                var result = await _userRepository.UpdateProfileAsync(model);
+
+                if (result != null)
+                {
+                    if (result.Succeeded) return Ok("User updated successfully!");
+                }
+                return BadRequest("User id is invalid, try again.");
+            }
+            catch (Exception ex) {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Interal searching the user.", Error = ex.Message.ToString() });
+            }
 
             
         }

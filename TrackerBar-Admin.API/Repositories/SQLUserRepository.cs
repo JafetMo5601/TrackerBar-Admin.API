@@ -4,16 +4,20 @@
 
 using TrackerBar_Admin.API.DataModels;
 using TrackerBar_Admin.API.DB;
+using Microsoft.AspNetCore.Identity;
 
 namespace TrackerBar_Admin.API.Repositories
 {
     public class SQLUserRepository : IUserRepository
     {
         private readonly ApplicationDBContext context;
-        private readonly AuthController _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public SQLUserRepository(ApplicationDBContext context)
+        public SQLUserRepository(
+            ApplicationDBContext context,
+            UserManager<User> userManager)
         {
+            _userManager = userManager;
             this.context = context;
         }
 
@@ -85,23 +89,26 @@ namespace TrackerBar_Admin.API.Repositories
            
         }
 
-        public async Task<UpdateProfile> UpdatedProfileAsync(UpdateProfile user, UpdateProfile model)
+        public async Task<IdentityResult> UpdateProfileAsync(UpdateProfile model)
         {
 
             try
             {
-                if (user != null)
+                if (userExist(model.Id))
                 {
-                    user.Id = model.Id;
-                    user.Name = model.Name;
-                    user.Last = model.Last;
-                    user.Username = model.Username;
-                    user.Password = model.Password;
-                    user.Email = model.Email;
-                    user.BirthDate = model.BirthDate;
+                    var userInfo = await GetUserByIdAsync(model.Id);
 
-                    var result = await _userManager.UpdateProfile(user);
-                    return (UpdateProfile)result;
+                    if (userInfo != null) { 
+                        userInfo.Name = model.Name;
+                        userInfo.Last = model.Last;
+                        userInfo.UserName = model.Username;
+                        userInfo.Password = model.Password;
+                        userInfo.Email = model.Email;
+                        userInfo.BirthDate = model.BirthDate;
+                        
+                        var result = await _userManager.UpdateAsync(userInfo);
+                        return result;
+                    } 
                 }
                 return null;
             }
@@ -110,25 +117,6 @@ namespace TrackerBar_Admin.API.Repositories
                 context.Dispose();
                 return null;
             }
-
-            /* if (user == null)
-             {
-
-                 return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "User ID does not exists.", Error = model.Id });
-             }
-             else
-             {
-                 user.Id = model.Id;
-                 user.Name = model.Name;
-                 user.Last = model.Last;
-                 user.Username = model.Username;
-                 user.Password = model.Password;
-                 user.Email = model.Email;
-                 user.BirthDate = model.BirthDate;
-
-                 var result = await _userManager.UpdateProfile(user);               
-                 return (UpdateProfile)result;
-             }           */
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using TrackerBar_Admin.API.DataModels;
+﻿using Microsoft.AspNetCore.Identity;
+using TrackerBar_Admin.API.DataModels;
 
 namespace TrackerBar_Admin.API.Repositories
 {
@@ -6,7 +7,7 @@ namespace TrackerBar_Admin.API.Repositories
     {
         Task<User> GetUserByIdAsync(string UserId);
 
-        Task<UpdateProfile> UpdatedProfileAsync(UpdateProfile user, UpdateProfile model);
+        Task<IdentityResult> UpdateProfileAsync(UpdateProfile model);
 
         Task<string> GetUserId(string userId);
         bool userExist(string userId);
