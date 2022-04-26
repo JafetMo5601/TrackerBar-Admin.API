@@ -171,25 +171,12 @@ namespace TrackerBar_Admin.API.Controllers
         [Route("profile/update")]
         public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfile model)
         {
-            var user = await _userManager.FindByIdAsync(model.Id);
 
-            if (user == null)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "User ID does not exists.", Error = model.Id });
-            }
-            else
-            {
-                user.Id = model.Id;
-                user.Name = model.Name;
-                user.Last = model.Last;
-                user.UserName = model.Username;
-                user.Password = model.Password;
-                user.Email = model.Email;
-                user.BirthDate = model.BirthDate;
+            var updateProfile = await _userRepository.UpdatedProfileAsync();
+                        
+            return (IActionResult)updateProfile;
 
-                var result = await _userManager.UpdateAsync(user);
-                return Ok(result);
-            }
+            
         }
     }
 }
