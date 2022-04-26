@@ -9,6 +9,7 @@ namespace TrackerBar_Admin.API.DataModels
         public string Direction { get; set; }
 
         public int RestaurantId { get; set; }
-        public Restaurant Restaurant { get; set; }
+        public Restaurant? Restaurant { get; set; }
+
     }
 }

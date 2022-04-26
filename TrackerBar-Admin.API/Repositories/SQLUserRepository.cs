@@ -1,4 +1,7 @@
+
 ﻿using TrackerBar_Admin.API.Controllers;
+﻿using Microsoft.EntityFrameworkCore;
+
 using TrackerBar_Admin.API.DataModels;
 using TrackerBar_Admin.API.DB;
 
@@ -14,13 +17,72 @@ namespace TrackerBar_Admin.API.Repositories
             this.context = context;
         }
 
-        public async Task<User> GetUserByIdAsync(string UserId)
+        //get's user from database
+        public async Task<User> GetUserByIdAsync(string userId)
         {
-            var user = (from x in context.Users
-                        where x.Id == UserId
-                        select x).First();
+            try
+            {
 
-            return user;
+             var result = new User();
+            //validates if user exist or not
+            if(userExist(userId))
+            {
+                result = (from X in context.Users
+                        where X.Id == userId
+                        select X).First();
+
+                return result;
+            }
+            return null;
+            }
+
+            catch (Exception ex)
+            {
+                context.Dispose();
+                throw ex;
+            }
+          
+        }
+
+        //get's only the userId from database
+        public async Task<string> GetUserId(string userId)
+        {
+
+            try
+            {
+            var result = (from X in context.Users
+                         where X.Id == userId
+                         select X.Id).First();
+            return result;
+            }
+            catch (Exception ex)
+            {
+                context.Dispose();
+                throw ex;
+            }
+           
+        }
+        //asks if user already exists or not in database
+        public bool userExist(string userId)
+        {
+            try
+            { 
+                var result = (from X in context.Users
+                          where X.Id == userId
+                          select X.Id).First();
+            
+            if(result != null)
+            {
+                return true;
+            }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                context.Dispose();
+                throw ex;
+            }
+           
         }
 
         public async Task<UpdateProfile> UpdatedProfileAsync(UpdateProfile user, UpdateProfile model)

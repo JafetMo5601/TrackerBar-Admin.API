@@ -25,7 +25,17 @@ namespace TrackerBar_Admin.API.Repositories
         {
             var oldDirection = await GetRestaurantDirectionAsync(restaurantId);
 
-            oldDirection.Direction = direction;
+            if (oldDirection != null)
+            {
+                oldDirection.Direction = direction;
+            }
+            else {
+                oldDirection = new RestaurantDirection()
+                {
+                    RestaurantId = restaurantId,
+                    Direction = direction
+                };
+            }
 
             var result = context.RestaurantDirection.Update(oldDirection);
 
@@ -36,6 +46,22 @@ namespace TrackerBar_Admin.API.Repositories
             var newDirection = await GetRestaurantDirectionAsync(restaurantId);
 
             return newDirection;
-        }   
+        }
+
+        public async Task<RestaurantDirection> createRestaurantDirection(int restaurantId, string direction) {
+            if (direction != "") {
+                var newDirection = new RestaurantDirection()
+                {
+                    Direction = direction,
+                    RestaurantId = restaurantId
+                };
+
+                await context.RestaurantDirection.AddAsync(newDirection);
+                await context.SaveChangesAsync();
+
+                return newDirection;
+            }
+            return null;
+        }
     }
 }
