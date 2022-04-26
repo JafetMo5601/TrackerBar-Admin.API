@@ -133,7 +133,8 @@ namespace TrackerBar_Admin.API.Controllers
                     await _userManager.AddToRoleAsync(user, UserRoles.User);
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Interal error asigning the roles.", Error = result.ToString() });
             }
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
@@ -164,6 +165,31 @@ namespace TrackerBar_Admin.API.Controllers
                 );
 
             return token;
+        }
+
+        [HttpPut]
+        [Route("profile/update")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfile model)
+        {
+            var user = await _userManager.FindByIdAsync(model.Id);
+
+            if (user == null)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "User ID does not exists.", Error = model.Id });
+            }
+            else
+            {
+                user.Id = model.Id;
+                user.Name = model.Name;
+                user.Last = model.Last;
+                user.UserName = model.Username;
+                user.Password = model.Password;
+                user.Email = model.Email;
+                user.BirthDate = model.BirthDate;
+
+                var result = await _userManager.UpdateAsync(user);
+                return Ok(result);
+            }
         }
     }
 }

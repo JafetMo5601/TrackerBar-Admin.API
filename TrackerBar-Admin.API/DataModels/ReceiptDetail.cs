@@ -10,6 +10,7 @@ namespace TrackerBar_Admin.API.DataModels
         public float SubtotalPrice { get; set; }
         public int PeopleQty { get; set; }
         public float Fees { get; set; }
+        public DateTime boughtAt { get; set; }
 
 
         public Restaurant Restaurant { get; set; }

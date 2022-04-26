@@ -26,6 +26,15 @@ namespace TrackerBar_Admin.API.Controllers
 
             this.mapper = mapper;
         }
+        //reservaciones
+        [HttpGet]
+        [Route("reservations")]
+        public async Task<IActionResult> GetReservaciones()
+        {
+            var mesas_dispo = await restaurantRepository.GetReservationsByIdAsync(1);
+
+            return Ok(mesas_dispo);
+        }
 
         [HttpGet]
         [Route("all")]
