@@ -33,36 +33,35 @@ namespace TrackerBar_Admin.API.Controllers
         {
             try
             {
-            var restaurants = await _restaurantRepository.GetRestaurantsAsync();
+                var restaurants = await _restaurantRepository.GetRestaurantsAsync();
 
-            var domainModelRestaurants = new List<Restaurant>();
+                if (restaurants != null) {
 
-            foreach (var restaurant in restaurants)
-            {
-                domainModelRestaurants.Add(new Restaurant()
-                {
-                    RestaurantId = restaurant.RestaurantId,
-                    Name = restaurant.Name,
-                    PeopleQty = restaurant.PeopleQty,
-                    TableQty = restaurant.TableQty,
-                    Phone = restaurant.Phone,
-                    User = new User()
+                    var domainModelRestaurants = new List<Restaurant>();
+
+                    foreach (var restaurant in restaurants)
                     {
-                        Id = restaurant.User.Id,
-                        Name = restaurant.User.Name,
-                        Last = restaurant.User.Last,
-                        UserName = restaurant.User.UserName,
-                        Email = restaurant.User.Email,
-                        BirthDate = restaurant.User.BirthDate
-                    },
-                    RestaurantDirection = new RestaurantDirection()
-                    {
-                        RestaurantDirectionId = restaurant.RestaurantDirection.RestaurantDirectionId,
-                        Direction = restaurant.RestaurantDirection.Direction
+                        domainModelRestaurants.Add(new Restaurant()
+                        {
+                            RestaurantId = restaurant.RestaurantId,
+                            Name = restaurant.Name,
+                            PeopleQty = restaurant.PeopleQty,
+                            TableQty = restaurant.TableQty,
+                            Phone = restaurant.Phone,
+                            User = new User()
+                            {
+                                Id = restaurant.User.Id,
+                                Name = restaurant.User.Name,
+                                Last = restaurant.User.Last,
+                                UserName = restaurant.User.UserName,
+                                Email = restaurant.User.Email,
+                                BirthDate = restaurant.User.BirthDate
+                            },
+                        });
                     }
-                });
-            }
-            return Ok(domainModelRestaurants);
+                    return Ok(domainModelRestaurants);
+                }
+                return BadRequest("There are no restaurants subscribed.");
             }
             catch (Exception ex)
             {
@@ -77,31 +76,18 @@ namespace TrackerBar_Admin.API.Controllers
         {
             try
             {
-             var updatedRestaurant = await _restaurantRepository.UpdateRestaurantAsync(restaurant);
+                var updatedRestaurant = await _restaurantRepository.UpdateRestaurantAsync(restaurant);
 
-            var domainModel = new DomainModels.Restaurant();
+                var domainModel = new DomainModels.Restaurant();
 
-            domainModel.RestaurantId = updatedRestaurant.RestaurantId;
-
-            domainModel.RestaurantId = updatedRestaurant.RestaurantId;
-            domainModel.Name = updatedRestaurant.Name;
-            domainModel.PeopleQty = updatedRestaurant.PeopleQty;
-            domainModel.TableQty = updatedRestaurant.TableQty;
-            domainModel.Phone = updatedRestaurant.Phone;
-            domainModel.User = new DomainModels.User(){
-                Id = updatedRestaurant.User.Id,
-                Name = updatedRestaurant.User.Name,
-                Last = updatedRestaurant.User.Name,
-                UserName = updatedRestaurant.User.UserName,
-                Email = updatedRestaurant.User.Email,
-                BirthDate = updatedRestaurant.User.BirthDate
-            };
-            domainModel.RestaurantDirection = new DomainModels.RestaurantDirection() {
-                RestaurantDirectionId = updatedRestaurant.RestaurantDirection.RestaurantDirectionId,
-                Direction = updatedRestaurant.RestaurantDirection.Direction
-            };
-
-            return Ok(domainModel);
+                if (updatedRestaurant != null)
+                { 
+                    return Ok(updatedRestaurant);
+                }
+                else
+                {
+                    return BadRequest("Verify the restaurant data!");
+                }
 
             }
             catch (Exception ex)
@@ -162,7 +148,7 @@ namespace TrackerBar_Admin.API.Controllers
 
         //shows the owned restaurant the user put in the parameter
         [HttpGet]
-        [Route("owned")]
+        [Route("by-name")]
         public async Task<IActionResult> YourRestaurant(string UserId, string RestaurantName)
         {
             try
@@ -182,6 +168,53 @@ namespace TrackerBar_Admin.API.Controllers
                 throw ex;
             }
            
+        }
+
+        [HttpGet]
+        [Route("by-id")]
+        public async Task<IActionResult> YourRestaurantById(string UserId, int RestaurantId)
+        {
+            try
+            {
+                var user = await _userRepository.GetUserByIdAsync(UserId);
+
+                if (user != null)
+                {
+                    var restaurant = await _restaurantRepository.GetRestaurantByIdAsync(RestaurantId);
+
+                    if (restaurant != null) { 
+                        return Ok(restaurant);
+                    }
+                }
+                return BadRequest("The restaurant does not exists, check the name and user id!");
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("by-owner")]
+        public async Task<IActionResult> YourRestaurants(string userId)
+        {
+            try
+            {
+                var restaurants = await _restaurantRepository.GetYourRestaurantsAsync(userId);
+
+                if (restaurants != null)
+                {
+                    return Ok(restaurants);
+                }
+                return NotFound("User does not have restaurants owned!");
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
     }
  }

@@ -35,7 +35,7 @@ namespace TrackerBar_Admin.API.Repositories
             catch (Exception ex)
             {
                 context.Dispose();
-                throw ex;
+                return null;
             }
           
         }
@@ -65,7 +65,7 @@ namespace TrackerBar_Admin.API.Repositories
             { 
                 var result = (from X in context.Users
                           where X.Id == userId
-                          select X.Id).First();
+                          select X.Id).FirstOrDefault();
             
             if(result != null)
             {
@@ -76,7 +76,7 @@ namespace TrackerBar_Admin.API.Repositories
             catch (Exception ex)
             {
                 context.Dispose();
-                throw ex;
+                return false;
             }
            
         }

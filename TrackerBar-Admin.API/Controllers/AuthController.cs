@@ -148,7 +148,7 @@ namespace TrackerBar_Admin.API.Controllers
             {
                 return Ok(user);
             }
-            return BadRequest();
+            return BadRequest("User does not exists.");
         }
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)

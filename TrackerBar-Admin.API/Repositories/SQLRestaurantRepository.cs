@@ -28,18 +28,27 @@ namespace TrackerBar_Admin.API.Repositories
             catch (Exception ex)
             {
                 context.Dispose();
-                throw ex;
+                return null;
             }
         }
 
-        public async Task<Restaurant> GetRestaurantByIdAsync(int restaurantId)
+        public async Task<YourRestaurantById> GetRestaurantByIdAsync(int restaurantId)
         {
             try
             {
 
                 var restaurant = (from R in context.Restaurant
+                                  join RD in context.RestaurantDirection on R.RestaurantId equals RD.RestaurantId
                                   where R.RestaurantId == restaurantId
-                                  select R).Include(nameof(User)).Include(nameof(RestaurantDirection)).FirstOrDefault();
+                                  select new YourRestaurantById(){
+                                      id = R.RestaurantId,
+                                      name = R.Name,
+                                      tablesQty = R.TableQty,
+                                      peopleQty = R.PeopleQty,
+                                      employeeQty = R.EmployeeQty,
+                                      address = RD.Direction,
+                                      phone = R.Phone
+                                  }).FirstOrDefault();
                 return restaurant;
 
             }
@@ -77,14 +86,14 @@ namespace TrackerBar_Admin.API.Repositories
                     await context.SaveChangesAsync();
                 }
 
-                restaurant = await GetRestaurantByIdAsync(updateRestaurant.RestaurantId);
+                restaurant = await GetYourRestaurant(updateRestaurant.Name);
 
                 return restaurant;
             }
             catch (Exception ex)
             {
                 context.Dispose();
-                throw ex;
+                return null;
             }
         }
         
@@ -211,6 +220,39 @@ namespace TrackerBar_Admin.API.Repositories
             {
                 context.Dispose();
                 throw ex;
+            }
+        }
+
+        public async Task<List<YourRestaurantsResponse>> GetYourRestaurantsAsync(string userId)
+        {
+            try
+            {
+                var restaurantsOwned = await (from R in context.Restaurant
+                                              join RD in context.RestaurantDirection on R.RestaurantId equals RD.RestaurantId
+                                              where R.User.Id == userId
+                                              select new { R.RestaurantId, R.Name, RD.Direction}).ToListAsync();
+
+                if (restaurantsOwned != null) { 
+                    var restaurantsToReturn = new List<YourRestaurantsResponse>();
+
+                    foreach (var restaurant in restaurantsOwned) {
+                        restaurantsToReturn.Add(new YourRestaurantsResponse()
+                        {
+                            id = restaurant.RestaurantId,
+                            name = restaurant.Name,
+                            address = restaurant.Direction
+                        });
+                    }
+
+
+                    return restaurantsToReturn;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                context.Dispose();
+                return null;
             }
         }
     }
